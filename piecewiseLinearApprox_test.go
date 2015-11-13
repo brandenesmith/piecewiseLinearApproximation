@@ -29,6 +29,35 @@ var minTest = [][]float64{
     {0, 0, 0},
 }
 
+var slopeTest = [][]piecewiseLinearApproximation.Pair {
+	// Zero slope
+	{piecewiseLinearApproximation.Pair{0, 1}, piecewiseLinearApproximation.Pair{5, 1}},
+	{piecewiseLinearApproximation.Pair{3, 7}, piecewiseLinearApproximation.Pair{8, 7}},
+	{piecewiseLinearApproximation.Pair{2, 22}, piecewiseLinearApproximation.Pair{22, 22}},
+
+	// Positive slope
+	{piecewiseLinearApproximation.Pair{0, 0}, piecewiseLinearApproximation.Pair{1, 1}},
+	{piecewiseLinearApproximation.Pair{1, 3}, piecewiseLinearApproximation.Pair{2, 7}},
+	{piecewiseLinearApproximation.Pair{7, 2}, piecewiseLinearApproximation.Pair{9, 2.5}},
+
+	// Negative slope
+	{piecewiseLinearApproximation.Pair{0, 1}, piecewiseLinearApproximation.Pair{1, 0}},
+	{piecewiseLinearApproximation.Pair{1, 7}, piecewiseLinearApproximation.Pair{2, 3}},
+	{piecewiseLinearApproximation.Pair{7, 2.5}, piecewiseLinearApproximation.Pair{9, 2}},
+}
+
+var slopeSolutions = []float64 {
+	0,
+	0,
+	0,
+	1,
+	4,
+	0.25,
+	-1,
+	-4,
+	-0.25,
+}
+
 func TestMax(t *testing.T) {
     for i := 0; i < len(maxTest); i++ {
         answer := piecewiseLinearApproximation.Max(maxTest[i][0], maxTest[i][1])
@@ -45,4 +74,13 @@ func TestMin(t *testing.T) {
             t.Errorf("Min returned %g expecting %g", answer, minTest[i][2])
         }
     }
+}
+
+func TestSlope(t *testing.T) {
+	for i := 0; i < len(slopeTest); i++ {
+		answer := piecewiseLinearApproximation.Slope(slopeTest[i][0], slopeTest[i][1])
+		if answer != slopeSolutions[i] {
+			t.Errorf("Slop returned %g, expecting %g", answer, slopeSolutions[i])
+		}
+	}
 }
