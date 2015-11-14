@@ -3,6 +3,7 @@ package piecewiseLinearApproximation_test
 import (
 	"piecewiseLinearApproximation"
 	"testing"
+	"strings"
 )
 
 var maxTest = [][]float64{
@@ -58,6 +59,49 @@ var slopeSolutions = []float64 {
 	-0.25,
 }
 
+var tollerance1 float64 = 1
+
+var timeSeries1 = []piecewiseLinearApproximation.Pair {
+	piecewiseLinearApproximation.Pair{1, 2},
+	piecewiseLinearApproximation.Pair{2, 4},
+	piecewiseLinearApproximation.Pair{3, 2},
+	piecewiseLinearApproximation.Pair{4, 4},
+	piecewiseLinearApproximation.Pair{5, 5},
+	piecewiseLinearApproximation.Pair{6, 4},
+	piecewiseLinearApproximation.Pair{7, 5},
+	piecewiseLinearApproximation.Pair{8, 5},
+	piecewiseLinearApproximation.Pair{9, 6},
+	piecewiseLinearApproximation.Pair{10, 4},
+	piecewiseLinearApproximation.Pair{11, 4},
+	piecewiseLinearApproximation.Pair{12, 6},
+	piecewiseLinearApproximation.Pair{13, 6},
+	piecewiseLinearApproximation.Pair{14, 6},
+	piecewiseLinearApproximation.Pair{15, 7},
+	piecewiseLinearApproximation.Pair{16, 7},
+	piecewiseLinearApproximation.Pair{17, 9},
+	piecewiseLinearApproximation.Pair{18, 10},
+	piecewiseLinearApproximation.Pair{19, 11},
+	piecewiseLinearApproximation.Pair{20, 13},
+}
+
+var equations1 = []string {
+	"y = 2(t - 1) + 2",
+	"y = -2(t - 2) + 4",
+	"y = 1(t - 3) + 2",
+	"y = -0.41666666666666663(t - 7) + 6",
+	"y = 0.7208333333333332(t - 11) + 4.333333333333334",
+	"y = 2.9000000000000004(t - 19) + 10.1",
+}
+
+var intervals1 = []piecewiseLinearApproximation.Pair {
+	piecewiseLinearApproximation.Pair{1, 2},
+	piecewiseLinearApproximation.Pair{2, 3},
+	piecewiseLinearApproximation.Pair{3, 7},
+	piecewiseLinearApproximation.Pair{7, 11},
+	piecewiseLinearApproximation.Pair{11, 19},
+	piecewiseLinearApproximation.Pair{19, 20},
+}
+
 func TestMax(t *testing.T) {
     for i := 0; i < len(maxTest); i++ {
         answer := piecewiseLinearApproximation.Max(maxTest[i][0], maxTest[i][1])
@@ -81,6 +125,19 @@ func TestSlope(t *testing.T) {
 		answer := piecewiseLinearApproximation.Slope(slopeTest[i][0], slopeTest[i][1])
 		if answer != slopeSolutions[i] {
 			t.Errorf("Slop returned %g, expecting %g", answer, slopeSolutions[i])
+		}
+	}
+}
+
+func TestPiecewiseLinearApprox(t *testing.T) {
+	solution := piecewiseLinearApproximation.PiecewiseLinearApprox(timeSeries1, tollerance1)
+	for i := 0; i < len(equations1); i++ {
+		expression := solution[i].Expression
+		interval := solution[i].Interval
+		if strings.Compare(expression, equations1[i]) != 0 {
+			t.Errorf("equations do not match")
+		} else if interval.X != intervals1[i].X || interval.Y != intervals1[i].Y {
+			t.Errorf("intervals do not match")
 		}
 	}
 }
