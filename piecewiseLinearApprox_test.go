@@ -7,7 +7,7 @@ import (
 )
 
 var maxTest = [][]float64{
-    {1, 2, 2},
+	{1, 2, 2},
     {3, 5, 5},
     {3, 2, 3},
     {-1, -2, -1},
@@ -102,6 +102,30 @@ var intervals1 = []piecewiseLinearApproximation.Pair {
 	piecewiseLinearApproximation.Pair{19, 20},
 }
 
+var tollerance2 float64 = 5
+
+var timeSeries2 = []piecewiseLinearApproximation.Pair {
+	piecewiseLinearApproximation.Pair{1, 68},
+	piecewiseLinearApproximation.Pair{5, 71},
+	piecewiseLinearApproximation.Pair{8, 76},
+	piecewiseLinearApproximation.Pair{12, 73},
+	piecewiseLinearApproximation.Pair{15, 71},
+	piecewiseLinearApproximation.Pair{19, 68},
+	piecewiseLinearApproximation.Pair{22, 70},
+	piecewiseLinearApproximation.Pair{26, 74},
+	piecewiseLinearApproximation.Pair{29, 73},
+}
+
+var equations2 = []string {
+	"y = 0.5(t - 1) + 68",
+	"y = -0.5(t - 15) + 75",
+}
+
+var intervals2 = []piecewiseLinearApproximation.Pair {
+	piecewiseLinearApproximation.Pair{1, 15},
+	piecewiseLinearApproximation.Pair{15, 29},
+}
+
 func TestMax(t *testing.T) {
     for i := 0; i < len(maxTest); i++ {
         answer := piecewiseLinearApproximation.Max(maxTest[i][0], maxTest[i][1])
@@ -137,6 +161,17 @@ func TestPiecewiseLinearApprox(t *testing.T) {
 		if strings.Compare(expression, equations1[i]) != 0 {
 			t.Errorf("equations do not match")
 		} else if interval.X != intervals1[i].X || interval.Y != intervals1[i].Y {
+			t.Errorf("intervals do not match")
+		}
+	}
+
+	solution2 := piecewiseLinearApproximation.PiecewiseLinearApprox(timeSeries2, tollerance2)
+	for i := 0; i < len(equations2); i++ {
+		expression2 := solution2[i].Expression
+		interval2 := solution2[i].Interval
+		if strings.Compare(expression2, equations2[i]) != 0 {
+			t.Errorf("equations do not match")
+		} else if interval2.X != intervals2[i].X || interval2.Y != intervals2[i].Y {
 			t.Errorf("intervals do not match")
 		}
 	}
