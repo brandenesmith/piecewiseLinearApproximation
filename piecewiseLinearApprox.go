@@ -11,7 +11,7 @@ func PiecewiseLinearApprox(timeSeries []Pair, tollerance float64) []Equation {
 
 	equations := make([]Equation, 0)
 	begin := timeSeries[0]
-	lower := math.SmallestNonzeroFloat64
+	lower := - math.MaxFloat64
 	upper := math.MaxFloat64
 
 	start := begin.X
