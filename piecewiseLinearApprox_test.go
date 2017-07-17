@@ -165,6 +165,23 @@ func TestPiecewiseLinearApprox(t *testing.T) {
 		}
 	}
 
+	// test the first equation
+	equation1 := solution[0]
+	if equation1.Slope != 2 {
+		t.Errorf("Slope returned %g expecting 2", equation1.Slope)
+	}
+
+	// try plotting a point
+	value := equation1.Plot(0)
+	if value != 0 {
+		t.Errorf("Plot returned %g expecting 0", value)
+	}
+
+	value = equation1.Plot(5)
+	if value != 10 {
+		t.Errorf("Plot returned %g expecting 10", value)
+	}
+
 	solution2 := piecewiseLinearApproximation.PiecewiseLinearApprox(timeSeries2, tollerance2)
 	for i := 0; i < len(equations2); i++ {
 		expression2 := solution2[i].Expression
