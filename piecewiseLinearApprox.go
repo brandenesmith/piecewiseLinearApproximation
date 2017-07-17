@@ -5,6 +5,12 @@ import (
 	"strconv"
 )
 
+func getPlotFunction(slope float64, beginX float64, beginY float64) func(float64) float64 {
+	return func(x float64) float64 {
+		return slope * (x - beginX) + beginY
+	}
+}
+
 func PiecewiseLinearApprox(timeSeries []Pair, tollerance float64) []Equation {
 	var expression string
 	var interval Pair
@@ -28,13 +34,14 @@ func PiecewiseLinearApprox(timeSeries []Pair, tollerance float64) []Equation {
 			lower = lowerPrime
 			upper = upperPrime
 		} else {
+			slope := (upper+lower)/2
 			expression = "y = " +
-				strconv.FormatFloat((upper+lower)/2, 'g', -1, 64) + "(t - " +
+				strconv.FormatFloat(slope, 'g', -1, 64) + "(t - " +
 				strconv.FormatFloat(begin.X, 'g', -1, 64) +
 				") + " + strconv.FormatFloat(begin.Y, 'g', -1, 64)
 
 			interval = Pair{start, end}
-			equations = append(equations, Equation{expression, interval})
+			equations = append(equations, Equation{expression, interval, slope, getPlotFunction(slope, begin.X, begin.Y)})
 
 			begin = Pair{timeSeries[i].X, ValueAtTime(lower, upper,
 				timeSeries[i].X, begin)}
@@ -47,13 +54,14 @@ func PiecewiseLinearApprox(timeSeries []Pair, tollerance float64) []Equation {
 	}
 	end = timeSeries[len(timeSeries)-1].X
 
+	slope := (upper+lower)/2
 	expression = "y = " +
-		strconv.FormatFloat((upper+lower)/2, 'g', -1, 64) + "(t - " +
+		strconv.FormatFloat(slope, 'g', -1, 64) + "(t - " +
 		strconv.FormatFloat(begin.X, 'g', -1, 64) +
 		") + " + strconv.FormatFloat(begin.Y, 'g', -1, 64)
 
 	interval = Pair{start, end}
-	equations = append(equations, Equation{expression, interval})
+	equations = append(equations, Equation{expression, interval, slope, getPlotFunction(slope, begin.X, begin.Y)})
 
 	return equations
 }
