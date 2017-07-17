@@ -11,6 +11,6 @@ type Pair struct {
 type Equation struct {
 	Expression string
 	Interval   Pair
-    Slope float64
-    Plot func(float64) float64
+	Slope float64
+	Plot func(float64) float64
 }
